@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Account Verification Using Email</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <h1 id="msg"></h1>
+    <form id="FormSub">
+        <label for="email">Email : </label>
+        <input type="text" placeholder="Email" id="email" name="email"><br>
+        <label for="password">Password : </label>
+        <input type="text" placeholder="Password" id="password" name="password"><br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <script>
+        document.getElementById('FormSub').addEventListener('submit', Send);
+        function Send(e) {
+                e.preventDefault();
+                var email = document.querySelector('#email').value;
+                var pass = document.querySelector('#password').value;
+                if(email.length > 1 && pass.length > 1){
+                    fetch('/login',{
+                    method: 'post',
+                    headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({Email: email, Password: pass})
+                })
+                .then((res)=>res.json())
+                .then(data => {
+                    if(data.verify === "true"){
+                        window.open('/dashboard', '_self');
+                    }else{
+                        document.getElementById('msg').innerHTML = "Unsuccessful";
+                    }
+                })
+                
+            }else{
+                document.getElementById('msg').innerHTML = "ERROR PASSWORD and EMAIL";
+            }
+        }
+        </script>
+</body>
+</html>
